@@ -1,0 +1,26 @@
+MEU PONTO — PRIMEIRA VERSÃO (PWA)
+
+O que é:
+Aplicativo web instalável (PWA), sem anúncios, sem login e sem servidor para guardar suas fotos.
+
+Como publicar gratuitamente usando apenas o Android:
+1. No Chrome, acesse https://github.com e crie uma conta gratuita ou entre na sua conta.
+2. Crie um repositório público chamado meu-ponto.
+3. Use Add file > Upload files e envie TODOS os arquivos desta pasta, mantendo os nomes e a estrutura.
+4. Abra Settings > Pages.
+5. Em Build and deployment, escolha Deploy from a branch; Branch: main; Folder: / (root); Save.
+6. Aguarde a publicação. O GitHub mostrará um endereço parecido com https://SEU-USUARIO.github.io/meu-ponto/.
+7. Abra esse endereço no Chrome do Android. Menu ⋮ > Instalar app (ou Adicionar à tela inicial).
+
+Depois de abrir uma vez com internet, o app instala os arquivos básicos para uso offline.
+As fotos são guardadas no IndexedDB do navegador no próprio aparelho. Não limpe os dados do Chrome nem desinstale o app sem exportar/compartilhar os comprovantes importantes.
+
+Limitações desta primeira versão:
+- Não é APK nativo; é um PWA instalado pelo Chrome.
+- As fotos ficam no espaço privado do aplicativo, não em uma pasta visível da Galeria.
+- A câmera abre pelo seletor de captura do Android. O Chrome precisa de permissão de câmera/fotos.
+- A disponibilidade de compartilhamento de arquivos depende do Android e do navegador.
+- Para segurança, mantenha cópias das fotos importantes fora do app.
+
+Privacidade:
+O código não envia imagens para nenhum servidor. O GitHub hospeda apenas os arquivos do aplicativo; os comprovantes ficam no armazenamento local do navegador.
