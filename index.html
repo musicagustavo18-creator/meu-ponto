@@ -140,3 +140,4 @@ $("settingsBack").addEventListener("click",()=>setNav("navHome"));
 $("backBtn").addEventListener("click",()=>setNav("navFolders"));
 (async()=>{try{await openDB();let s=await req("settings","readonly",x=>x.get("main"));if(s?.value)settings={...settings,...s.value};applyTheme();await render();if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});}catch(e){alert("Erro ao iniciar o armazenamento. Tente abrir novamente.")}})();
 </script></body></html>
+
