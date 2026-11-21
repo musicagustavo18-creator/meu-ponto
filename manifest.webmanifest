@@ -1,11 +1,11 @@
 {
-  "name": "Meu Ponto – Comprovantes",
+  "name": "Meu Ponto",
   "short_name": "Meu Ponto",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f3f6fb",
-  "theme_color": "#1769aa",
+  "background_color": "#101923",
+  "theme_color": "#147d8c",
   "lang": "pt-BR",
   "icons": [
     {
