@@ -203,7 +203,7 @@ label{display:block;margin-top:9px;font-size:12px;font-weight:750;color:var(--mu
  </section>
 
 <section id="assistantView" class="hidden">
- <div class="eyebrow">ASSISTENTE LOCAL · 100% GRATUITA</div>
+ <div class="eyebrow">ASSISTENTE LOCAL · GRATUITA · v9</div>
  <h2 style="margin-top:4px">Meu Ponto Assistente</h2>
  <div class="card" style="background:linear-gradient(125deg,#102f49,#176b87 65%,#168d91);color:white;border:0">
   <div style="font-size:28px">✦</div>
@@ -297,7 +297,7 @@ $("settingsBtn").onclick=async()=>{setNav("navSettings");$("home").classList.add
 $("settingsBack").onclick=home;
 $("saveSettings").onclick=async()=>{let n=+$("cutoff").value;if(n<1||n>28){alert("Escolha um dia entre 1 e 28.");return}settings={cutoff:n,stamp:$("stamp").checked,quality:$("quality").value,theme:$("theme").value};await put("settings",{key:"main",value:settings});applyTheme();home();alert("Ajustes salvos!")};
 function applyTheme(){let t=settings.theme==="system"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):settings.theme;document.documentElement.dataset.theme=t}
-function setNav(active){["navHome","navCalendar","navFolders","navSettings"].forEach(id=>$(id).classList.toggle("active",id===active))}
+function setNav(active){["navHome","navCalendar","navFolders","navSettings","navReports","navBackup","navAssistant"].forEach(id=>{const el=$(id);if(el)el.classList.toggle("active",id===active)})}
 $("navHome").onclick=()=>{home();setNav("navHome");window.scrollTo({top:0,behavior:"smooth"})};
 $("navFolders").onclick=()=>{home();setNav("navFolders");setTimeout(()=>$("folderList").scrollIntoView({behavior:"smooth",block:"start"}),30)};
 $("navSettings").onclick=()=>{$("settingsBtn").click();setNav("navSettings")};
@@ -321,7 +321,7 @@ function timeMins(t){if(!t)return null;let [h,m]=t.split(":").map(Number);return
 function elapsed(a,b){let v=b-a;return v<0?v+1440:v}
 function workedMins(p){let a=timeMins(p.p1),b=timeMins(p.p2),c=timeMins(p.p3),d=timeMins(p.p4);if([a,b,c,d].some(v=>v===null))return null;return elapsed(a,b)+elapsed(c,d)}
 async function loadSchedule(){let s=await req("settings","readonly",x=>x.get("schedule"));if(s?.value)schedule={...schedule,...s.value,overrides:s.value.overrides||{}}}
-function setSection(name){["home","folderView","settings","calendarView","hoursView","reportsView","backupView","assistantView"].forEach(id=>$(id).classList.toggle("hidden",id!==name))}
+function setSection(name){["home","folderView","settings","calendarView","reportsView","backupView","assistantView"].forEach(id=>{const el=$(id);if(el)el.classList.toggle("hidden",id!==name)})}
 function renderCalendar(){
  $("calendarTitle").textContent=monthNames[calendarCursor.getMonth()]+" "+calendarCursor.getFullYear();
  let grid=$("calendarGrid");grid.innerHTML="";
@@ -462,7 +462,7 @@ async function localAssistantAnswer(q){
   return status+" Seu ciclo usa a data inicial cadastrada e alterna plantão e descanso, respeitando as exceções que você marcou no calendário.";
  }
  if(/quantos.*(comprovante|foto)|comprovante.*(tenho|salv)|fotos/.test(t)){
-  return "Você tem "+photos.length+" comprovante(s) salvo(s) em "+folders.length+" pasta(s). No período atual, entre "+start.split("-").reverse().join("/")+" e "+end.split("-").reverse().join("/"),+" há "+monthPhotos.length+" foto(s).";
+  return "Você tem "+photos.length+" comprovante(s) salvo(s) em "+folders.length+" pasta(s). No período atual, entre "+start.split("-").reverse().join("/")+" e "+end.split("-").reverse().join("/")+", há "+monthPhotos.length+" foto(s).";
  }
  if(/sem foto|sem comprovante|conferir|faltando/.test(t)){
   if(!schedule.firstDate)return "Configure primeiro sua escala. Depois consigo comparar os dias previstos com as datas das fotos salvas.";
@@ -488,6 +488,6 @@ async function askLocalAssistant(q){
 $("aiSend").onclick=()=>askLocalAssistant($("aiQuestion").value);
 $("aiQuestion").addEventListener("keydown",e=>{if(e.key==="Enter")askLocalAssistant($("aiQuestion").value)});
 document.querySelectorAll(".ai-prompt").forEach(b=>b.addEventListener("click",()=>askLocalAssistant(b.dataset.q)));
-$("navAssistant").onclick=()=>{setSection("assistantView");setV6Nav("navAssistant")};
+$("navAssistant").onclick=()=>{setSection("assistantView");setV6Nav("navAssistant");window.scrollTo({top:0,behavior:"smooth"})};
 
 </script></body></html>

@@ -1,9 +1,8 @@
-MEU PONTO v8 — ASSISTENTE LOCAL GRATUITA
+MEU PONTO v9 — CORREÇÃO DA ASSISTENTE LOCAL
 
-Esta versão adiciona uma assistente local baseada em regras, sem IA generativa externa.
-- Sem API, sem chave, sem assinatura, sem cobrança e sem conexão para responder.
-- Consulta escala, próximo plantão, situação de hoje, contagem de fotos, pastas e dias previstos sem foto.
-- Não envia fotos ou dados para servidores.
-- Não é um modelo generativo e não responde livremente a qualquer assunto.
-- Mantém os dados do IndexedDB existentes; não limpe o armazenamento do navegador.
-Envie os cinco arquivos individualmente para a raiz do repositório, substituindo os anteriores.
+Corrige a navegação entre seções: a versão anterior tentava ativar uma seção antiga (hoursView) que já não existe, interrompendo a troca de telas.
+Também corrige a resposta de contagem de fotos da assistente.
+
+A assistente permanece local e gratuita: sem API, sem chave, sem assinatura e sem envio de dados para servidores.
+Envie os cinco arquivos individuais para a raiz do repositório GitHub, substituindo os anteriores.
+Não limpe o armazenamento do navegador: fotos, pastas e escala ficam no IndexedDB existente.
