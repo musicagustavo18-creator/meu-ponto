@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#102A43"><meta name="description" content="Gestão pessoal da jornada, escala e comprovantes de ponto.">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg">
-<title>Meu Ponto · Gestão da jornada</title>
+<title>Meu Ponto · Gestão inteligente dos comprovantes</title>
 <style>
 :root{--bg:#f3f6fb;--card:#fff;--ink:#172536;--muted:#68788a;--blue:#147d8c;--soft:#e7f1fb;--line:#e4eaf0;--danger:#b42318}
 [data-theme=dark]{--bg:#101923;--card:#1b2937;--ink:#eef4fa;--muted:#a9b8c7;--blue:#57c6ce;--soft:#233d53;--line:#334354;--danger:#ff8178}
@@ -137,21 +137,26 @@ label{display:block;margin-top:9px;font-size:12px;font-weight:750;color:var(--mu
 .badge-note{font-size:10px;color:var(--muted);font-weight:650}
 @media(min-width:650px){.metric-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.action-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
+ 
+.ai-bubble{max-width:92%;padding:12px 14px;border-radius:16px;background:var(--soft);font-size:13px;line-height:1.55;white-space:pre-wrap}
+.ai-bubble.user{align-self:flex-end;background:var(--blue);color:#fff}
+.ai-bubble.bot{align-self:flex-start}
+#aiQuestion{min-width:0}
 </style></head>
 <body>
-<header><div class="brand"><div class="brand-mark">MP</div><div><h1>Meu Ponto</h1><div class="sub">Sua jornada, sob controle.</div></div></div><button id="settingsBtn" class="icon-button" aria-label="Ajustes">⚙</button></header>
+<header><div class="brand"><div class="brand-mark">MP</div><div><h1>Meu Ponto</h1><div class="sub">Sua escala e seus comprovantes, organizados.</div></div></div><button id="settingsBtn" class="icon-button" aria-label="Ajustes">⚙</button></header>
 <main>
 <section id="home">
 <div class="section-head"><div><div class="eyebrow">VISÃO GERAL</div><h2 style="margin:4px 0 12px">Seu painel</h2></div><span class="pill" id="todayLabel">Hoje</span></div>
 <div class="metric-grid" style="margin-bottom:14px">
  <div class="metric"><small>Comprovantes salvos</small><strong id="dashPhotos">0</strong></div>
  <div class="metric"><small>Plantões registrados</small><strong id="dashShifts">0</strong></div>
- <div class="metric"><small>Horas registradas</small><strong id="dashWorked">00:00</strong></div>
+ <div class="metric"><small>Plantões previstos no mês</small><strong id="dashPlanned">0</strong></div>
  <div class="metric"><small>Próximo status</small><strong id="dashStatus" style="font-size:16px">—</strong></div>
 </div>
 <div class="action-grid">
  <button class="action-tile" id="quickPhoto"><span>📷</span><b>Fotografar ponto</b><small class="muted">Guardar comprovante</small></button>
- <button class="action-tile" id="quickPunch"><span>⏱️</span><b>Registrar batidas</b><small class="muted">Conferir plantão</small></button>
+ <button class="action-tile" id="quickAudit"><span>✓</span><b>Conferir comprovantes</b><small class="muted">Ver dias com e sem foto</small></button>
  <button class="action-tile" id="quickCalendar"><span>🗓️</span><b>Ver minha escala</b><small class="muted">Plantões e folgas</small></button>
  <button class="action-tile" id="quickReport"><span>📊</span><b>Relatórios</b><small class="muted">Resumo do período</small></button>
 </div>
@@ -182,48 +187,53 @@ label{display:block;margin-top:9px;font-size:12px;font-weight:750;color:var(--mu
  </div>
  <div class="card"><strong>Dia selecionado</strong><p class="sub" id="selectedDayInfo">Toque em um dia para conferir a escala.</p><button id="overrideDay">Alternar trabalho / folga neste dia</button></div>
 </section>
-<section id="hoursView" class="hidden">
- <div class="toolbar"><h2 style="flex:1;margin:0">Banco de horas</h2><span class="pill">Estimativa pessoal</span></div>
- <div class="metric-grid" style="margin-top:14px">
-  <div class="metric positive"><small>Saldo acumulado</small><strong id="totalBalance">00:00</strong></div>
-  <div class="metric"><small>Horas trabalhadas</small><strong id="totalWorked">00:00</strong></div>
-  <div class="metric"><small>Horas previstas</small><strong id="totalExpected">00:00</strong></div>
-  <div class="metric"><small>Plantões registrados</small><strong id="shiftCount">0</strong></div>
- </div>
- <div class="card">
-  <strong>Registrar ou conferir as quatro batidas</strong>
-  <p class="notice">Digite os horários do comprovante. O aplicativo soma os dois períodos e desconta o intervalo. Plantões que atravessam a meia-noite são considerados.</p>
-  <label for="punchDate">Data do plantão</label><input id="punchDate" type="date">
-  <div class="punch-row">
-   <label>Entrada<input id="p1" type="time"></label>
-   <label>Saída para refeição<input id="p2" type="time"></label>
-   <label>Retorno da refeição<input id="p3" type="time"></label>
-   <label>Saída final<input id="p4" type="time"></label>
-  </div>
-  <label for="punchNote">Observação (opcional)</label><input id="punchNote" placeholder="Ex.: troca de plantão">
-  <button class="primary" id="savePunch">Salvar batidas e calcular</button>
- </div>
- <div class="card"><strong>Histórico de plantões</strong><div id="punchList" class="sub" style="margin-top:10px">Nenhum plantão registrado.</div></div>
-</section>
-
-
 <section id="reportsView" class="hidden">
  <div class="eyebrow">ANÁLISE PESSOAL</div><h2 style="margin-top:4px">Relatórios</h2>
- <div class="card"><div class="section-head"><strong>Resumo de horas</strong><span class="pill">Estimativa</span></div>
+ <div class="card"><div class="section-head"><strong>Resumo da documentação</strong><span class="pill">Comprovantes</span></div>
   <div class="metric-grid" style="margin-top:12px">
-   <div class="metric"><small>Total trabalhado</small><strong id="repWorked">00:00</strong></div>
-   <div class="metric"><small>Saldo estimado</small><strong id="repBalance">00:00</strong></div>
-   <div class="metric"><small>Plantões</small><strong id="repShifts">0</strong></div>
-   <div class="metric"><small>Comprovantes</small><strong id="repPhotos">0</strong></div>
+   <div class="metric"><small>Fotos salvas</small><strong id="repPhotos">0</strong></div>
+   <div class="metric"><small>Dias de plantão no mês</small><strong id="repPlanned">0</strong></div>
+   <div class="metric"><small>Dias com comprovante</small><strong id="repCovered">0</strong></div>
+   <div class="metric"><small>Dias sem foto</small><strong id="repMissing">0</strong></div>
   </div>
-  <p class="notice">O saldo compara os plantões registrados com uma referência de 12 horas por plantão. Não substitui o espelho de ponto nem considera regras específicas de folha, feriados ou acordos coletivos.</p>
+  <p class="notice">A conferência usa a escala cadastrada e a data em que cada foto foi salva. Um dia sem foto não significa falta ou erro no ponto: é apenas um lembrete para conferir seu comprovante.</p>
  </div>
- <div class="card"><strong>Atividade dos últimos 6 meses</strong><div id="monthlyReport" style="margin-top:12px"></div></div>
- <button class="primary" id="exportCSV">Baixar relatório de batidas (CSV)</button>
+ </div>
+ <div class="card"><strong>Comprovantes salvos nos últimos 6 meses</strong><div id="monthlyReport" style="margin-top:12px"></div></div>
+ </section>
+
+<section id="assistantView" class="hidden">
+ <div class="eyebrow">ASSISTENTE LOCAL · 100% GRATUITA</div>
+ <h2 style="margin-top:4px">Meu Ponto Assistente</h2>
+ <div class="card" style="background:linear-gradient(125deg,#102f49,#176b87 65%,#168d91);color:white;border:0">
+  <div style="font-size:28px">✦</div>
+  <strong>Oi! Sou sua assistente do Meu Ponto.</strong>
+  <p style="font-size:13px;line-height:1.55;color:#e1f1f4">Posso consultar sua escala, contar comprovantes, mostrar suas pastas e ajudar a conferir o período. Tudo é processado neste aparelho, sem internet e sem cobrança.</p>
+  <span style="font-size:11px;color:#c4e4e9">Modo offline · Sem API · Sem assinatura</span>
+ </div>
+ <div class="card">
+  <strong>Perguntas rápidas</strong>
+  <div class="action-grid" style="margin-top:12px">
+   <button class="action-tile ai-prompt" data-q="Qual é meu próximo plantão?"><span>🗓️</span><b>Próximo plantão</b></button>
+   <button class="action-tile ai-prompt" data-q="Quantos comprovantes tenho?"><span>📷</span><b>Meus comprovantes</b></button>
+   <button class="action-tile ai-prompt" data-q="Como está minha escala?"><span>📆</span><b>Minha escala</b></button>
+   <button class="action-tile ai-prompt" data-q="Quais dias de plantão estão sem foto?"><span>🔎</span><b>Conferir fotos</b></button>
+  </div>
+ </div>
+ <div class="card">
+  <strong>Converse com a assistente</strong>
+  <div id="aiChat" aria-live="polite" style="display:flex;flex-direction:column;gap:10px;margin:14px 0">
+   <div class="ai-bubble">Olá! Pergunte sobre seus plantões, folgas, fotos ou pastas. Ex.: “Quantos plantões tenho este mês?”</div>
+  </div>
+  <label for="aiQuestion">Sua pergunta</label>
+  <div class="row" style="align-items:stretch"><input id="aiQuestion" placeholder="Digite sua pergunta..." style="flex:1;margin-bottom:0"><button id="aiSend" class="primary" style="width:auto;margin:6px 0 12px;padding:12px 16px">Enviar</button></div>
+  <p class="notice">Esta é uma assistente local baseada nas regras e nos dados do aplicativo. Ela não é um modelo generativo como ChatGPT e não interpreta livremente qualquer assunto. Não envia dados para terceiros.</p>
+ </div>
 </section>
+
 <section id="backupView" class="hidden">
  <div class="eyebrow">SEUS DADOS, SOB SEU CONTROLE</div><h2 style="margin-top:4px">Privacidade e cópias de segurança</h2>
- <div class="card"><strong>Armazenamento neste aparelho</strong><p class="notice">Fotos, pastas, escala e batidas ficam no armazenamento local do navegador. Uma cópia de segurança ajuda a recuperar os dados se você trocar de celular ou limpar o navegador.</p><div class="metric-grid"><div class="metric"><small>Fotos</small><strong id="backupPhotos">0</strong></div><div class="metric"><small>Pastas</small><strong id="backupFolders">0</strong></div><div class="metric"><small>Batidas</small><strong id="backupPunches">0</strong></div></div></div>
+ <div class="card"><strong>Armazenamento neste aparelho</strong><p class="notice">Fotos, pastas e escala ficam no armazenamento local do navegador. Uma cópia de segurança ajuda a recuperar os dados se você trocar de celular ou limpar o navegador.</p><div class="metric-grid"><div class="metric"><small>Fotos</small><strong id="backupPhotos">0</strong></div><div class="metric"><small>Pastas</small><strong id="backupFolders">0</strong></div></div></div>
  <div class="card"><strong>Exportar cópia completa</strong><p class="notice">Gera um arquivo de backup com fotos, pastas, escala, configurações e registros. Guarde em local seguro. O arquivo pode conter dados pessoais.</p><button class="primary" id="exportBackup">Criar cópia de segurança</button></div>
  <div class="card"><strong>Restaurar cópia</strong><p class="notice">Selecione um backup Meu Ponto em formato JSON. Os dados serão mesclados aos existentes; registros com o mesmo identificador serão atualizados.</p><input id="backupFile" type="file" accept=".json,application/json"><button id="importBackup">Restaurar backup selecionado</button></div>
  <div class="card"><strong>Diagnóstico</strong><div id="storageStatus" class="notice">Verificando armazenamento...</div><button id="checkStorage">Atualizar diagnóstico</button></div>
@@ -246,9 +256,9 @@ label{display:block;margin-top:9px;font-size:12px;font-weight:750;color:var(--mu
 <nav class="bottom-nav" aria-label="Navegação principal"><div class="bottom-nav-inner">
 <button id="navHome" class="active"><span class="navicon">⌂</span>Início</button>
 <button id="navCalendar"><span class="navicon">▦</span>Escala</button>
-<button id="navHours"><span class="navicon">◷</span>Horas</button>
 <button id="navFolders"><span class="navicon">▤</span>Pastas</button>
 <button id="navReports"><span class="navicon">▥</span>Relatórios</button>
+<button id="navAssistant"><span class="navicon">✦</span>Assistente</button>
 <button id="navBackup"><span class="navicon">⬡</span>Backup</button>
 <button id="navSettings"><span class="navicon">⚙</span>Ajustes</button>
 </div></nav>
@@ -287,7 +297,7 @@ $("settingsBtn").onclick=async()=>{setNav("navSettings");$("home").classList.add
 $("settingsBack").onclick=home;
 $("saveSettings").onclick=async()=>{let n=+$("cutoff").value;if(n<1||n>28){alert("Escolha um dia entre 1 e 28.");return}settings={cutoff:n,stamp:$("stamp").checked,quality:$("quality").value,theme:$("theme").value};await put("settings",{key:"main",value:settings});applyTheme();home();alert("Ajustes salvos!")};
 function applyTheme(){let t=settings.theme==="system"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):settings.theme;document.documentElement.dataset.theme=t}
-function setNav(active){["navHome","navCalendar","navHours","navFolders","navSettings"].forEach(id=>$(id).classList.toggle("active",id===active))}
+function setNav(active){["navHome","navCalendar","navFolders","navSettings"].forEach(id=>$(id).classList.toggle("active",id===active))}
 $("navHome").onclick=()=>{home();setNav("navHome");window.scrollTo({top:0,behavior:"smooth"})};
 $("navFolders").onclick=()=>{home();setNav("navFolders");setTimeout(()=>$("folderList").scrollIntoView({behavior:"smooth",block:"start"}),30)};
 $("navSettings").onclick=()=>{$("settingsBtn").click();setNav("navSettings")};
@@ -311,7 +321,7 @@ function timeMins(t){if(!t)return null;let [h,m]=t.split(":").map(Number);return
 function elapsed(a,b){let v=b-a;return v<0?v+1440:v}
 function workedMins(p){let a=timeMins(p.p1),b=timeMins(p.p2),c=timeMins(p.p3),d=timeMins(p.p4);if([a,b,c,d].some(v=>v===null))return null;return elapsed(a,b)+elapsed(c,d)}
 async function loadSchedule(){let s=await req("settings","readonly",x=>x.get("schedule"));if(s?.value)schedule={...schedule,...s.value,overrides:s.value.overrides||{}}}
-function setSection(name){["home","folderView","settings","calendarView","hoursView","reportsView","backupView"].forEach(id=>$(id).classList.toggle("hidden",id!==name))}
+function setSection(name){["home","folderView","settings","calendarView","hoursView","reportsView","backupView","assistantView"].forEach(id=>$(id).classList.toggle("hidden",id!==name))}
 function renderCalendar(){
  $("calendarTitle").textContent=monthNames[calendarCursor.getMonth()]+" "+calendarCursor.getFullYear();
  let grid=$("calendarGrid");grid.innerHTML="";
@@ -329,36 +339,41 @@ async function renderHours(){
  ps.reverse().forEach(p=>{let v=workedMins(p),el=document.createElement("div");el.className="folder";let a=document.createElement("strong"),b=document.createElement("small");a.textContent=fromKey(p.date).toLocaleDateString("pt-BR");b.textContent=`${p.p1} · ${p.p2} · ${p.p3} · ${p.p4} | ${fmtMins(v)} trabalhadas`;el.append(a,b);el.onclick=()=>{$("punchDate").value=p.date;["p1","p2","p3","p4"].forEach((id,i)=>$(id).value=p[id]||"");$("punchNote").value=p.note||""};list.append(el)})
 }
 $("navCalendar").onclick=()=>{setSection("calendarView");setNav("navCalendar");$("firstShift").value=schedule.firstDate;$("shiftStart").value=schedule.start||"19:00";renderCalendar()};
-$("navHours").onclick=()=>{setSection("hoursView");setNav("navHours");renderHours()};
 $("prevMonth").onclick=()=>{calendarCursor.setMonth(calendarCursor.getMonth()-1);renderCalendar()};
 $("nextMonth").onclick=()=>{calendarCursor.setMonth(calendarCursor.getMonth()+1);renderCalendar()};
 $("saveSchedule").onclick=async()=>{if(!$("firstShift").value){alert("Informe a data do primeiro plantão.");return}schedule.firstDate=$("firstShift").value;schedule.start=$("shiftStart").value;await put("settings",{key:"schedule",value:schedule});renderCalendar();alert("Escala 12x36 configurada!")};
 $("overrideDay").onclick=async()=>{if(!selectedCalendarDate){alert("Escolha um dia no calendário.");return}schedule.overrides[selectedCalendarDate]=!isWorkDay(selectedCalendarDate);await put("settings",{key:"schedule",value:schedule});renderCalendar();$("selectedDayInfo").textContent=fromKey(selectedCalendarDate).toLocaleDateString("pt-BR")+" · "+(isWorkDay(selectedCalendarDate)?"Dia de plantão":"Dia de folga")};
-$("savePunch").onclick=async()=>{let date=$("punchDate").value;if(!date){alert("Informe a data do plantão.");return}let p={date,p1:$("p1").value,p2:$("p2").value,p3:$("p3").value,p4:$("p4").value,note:$("punchNote").value};if([p.p1,p.p2,p.p3,p.p4].some(v=>!v)){alert("Preencha as quatro batidas.");return}let total=workedMins(p);await put("punches",p);alert("Plantão salvo: "+fmtMins(total)+" trabalhadas. Confira os horários; este é um cálculo pessoal estimado.");renderHours()};
 
 (async()=>{try{await openDB();let s=await req("settings","readonly",x=>x.get("main"));if(s?.value)settings={...settings,...s.value};applyTheme();await loadSchedule();await render();if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});}catch(e){alert("Erro ao iniciar o armazenamento. Tente abrir novamente.")}})();
 
-// v6 enhancements: dashboard, reports, search and portable local backup.
+// v7 enhancements: dashboard, reports, search and portable local backup.
 function fmtHours(mins){return fmtMins(mins||0)}
+function periodDateKeys(){
+ const now=new Date(),cut=+settings.cutoff;
+ const end=new Date(now.getFullYear(),now.getMonth()+(now.getDate()>cut?1:0),cut);
+ const start=new Date(end.getFullYear(),end.getMonth()-1,cut+1);
+ return [dateKey(start),dateKey(end)];
+}
 async function updateDashboard(){
- const photos=await all("photos"),folders=await all("folders"),punches=await all("punches");
- let total=0;punches.forEach(p=>{let v=workedMins(p);if(v!==null)total+=v});
- $("dashPhotos").textContent=photos.length;$("dashShifts").textContent=punches.length;$("dashWorked").textContent=fmtHours(total);
+ const photos=await all("photos");
+ $("dashPhotos").textContent=photos.length;
  $("todayLabel").textContent=new Date().toLocaleDateString("pt-BR",{weekday:"short",day:"2-digit",month:"short"});
  let today=dateKey(new Date());$("dashStatus").textContent=isWorkDay(today)?"Plantão":"Folga";
+ const [a,b]=periodDateKeys();let planned=0;
+ for(let d=new Date(a+"T12:00:00");d<=new Date(b+"T12:00:00");d.setDate(d.getDate()+1)){if(isWorkDay(dateKey(d)))planned++}
+ $("dashPlanned").textContent=planned;
 }
 const oldRender=render;
 render=async function(){await oldRender();await updateDashboard()};
 $("quickPhoto").onclick=()=>$("camera").click();
-$("quickPunch").onclick=()=>{setSection("hoursView");setNav("navHours");$("punchDate").value=dateKey(new Date());renderHours()};
 $("quickCalendar").onclick=()=>$("navCalendar").click();
 $("quickReport").onclick=()=>$("navReports").click();
+$("quickAudit").onclick=()=>$("navReports").click();
 $("folderSearch").addEventListener("input",e=>{let q=e.target.value.trim().toLocaleLowerCase("pt-BR");[...$("folderList").children].forEach(el=>el.classList.toggle("hidden",!el.textContent.toLocaleLowerCase("pt-BR").includes(q)))});
-function setV6Nav(active){["navHome","navCalendar","navHours","navFolders","navSettings","navReports","navBackup"].forEach(id=>$(id)?.classList.toggle("active",id===active))}
+function setV6Nav(active){["navHome","navCalendar","navFolders","navSettings","navReports","navBackup","navAssistant"].forEach(id=>$(id)?.classList.toggle("active",id===active))}
 $("navHome").onclick=()=>{setSection("home");setV6Nav("navHome");render();window.scrollTo({top:0,behavior:"smooth"})};
 $("navFolders").onclick=()=>{setSection("home");setV6Nav("navFolders");setTimeout(()=>$("folderList").scrollIntoView({behavior:"smooth",block:"start"}),40)};
 $("navCalendar").onclick=()=>{setSection("calendarView");setV6Nav("navCalendar");$("firstShift").value=schedule.firstDate;$("shiftStart").value=schedule.start||"19:00";renderCalendar()};
-$("navHours").onclick=()=>{setSection("hoursView");setV6Nav("navHours");renderHours()};
 $("navReports").onclick=()=>{setSection("reportsView");setV6Nav("navReports");renderReports()};
 $("navBackup").onclick=()=>{setSection("backupView");setV6Nav("navBackup");renderBackupStatus()};
 $("navSettings").onclick=()=>{$("settingsBtn").click();setV6Nav("navSettings")};
@@ -371,21 +386,17 @@ $("saveSettings").onclick=async()=>{
 };
 $("backBtn").onclick=()=>{setSection("home");setV6Nav("navFolders");render()};
 async function renderReports(){
- let ps=await all("punches"),photos=await all("photos"),worked=0,expected=0;
- ps.forEach(p=>{let v=workedMins(p);if(v!==null)worked+=v;expected+=720});
- $("repWorked").textContent=fmtHours(worked);$("repBalance").textContent=fmtMins(worked-expected);$("repShifts").textContent=ps.length;$("repPhotos").textContent=photos.length;
+ let photos=await all("photos"),[start,end]=periodDateKeys(),days=new Set(photos.filter(p=>dateKey(new Date(p.date))>=start&&dateKey(new Date(p.date))<=end).map(p=>dateKey(new Date(p.date))));
+ let planned=0,covered=0;
+ for(let d=new Date(start+"T12:00:00");d<=new Date(end+"T12:00:00");d.setDate(d.getDate()+1)){
+  let key=dateKey(d);if(isWorkDay(key)){planned++;if(days.has(key))covered++}
+ }
+ $("repPhotos").textContent=photos.length;$("repPlanned").textContent=planned;$("repCovered").textContent=covered;$("repMissing").textContent=Math.max(0,planned-covered);
  let now=new Date(),months=[];
- for(let i=5;i>=0;i--){let d=new Date(now.getFullYear(),now.getMonth()-i,1),key=`${d.getFullYear()}-${pad2(d.getMonth()+1)}`,count=ps.filter(p=>p.date.startsWith(key)).length;months.push({label:monthNames[d.getMonth()].slice(0,3)+" "+String(d.getFullYear()).slice(-2),count})}
+ for(let i=5;i>=0;i--){let d=new Date(now.getFullYear(),now.getMonth()-i,1),key=`${d.getFullYear()}-${pad2(d.getMonth()+1)}`,count=photos.filter(p=>new Date(p.date).getFullYear()===d.getFullYear()&&new Date(p.date).getMonth()===d.getMonth()).length;months.push({label:monthNames[d.getMonth()].slice(0,3)+" "+String(d.getFullYear()).slice(-2),count})}
  let max=Math.max(1,...months.map(x=>x.count));$("monthlyReport").innerHTML="";
  months.forEach(m=>{let row=document.createElement("div");row.className="report-row";let label=document.createElement("span");label.textContent=m.label;let right=document.createElement("div");right.style.cssText="display:flex;align-items:center;gap:9px;min-width:58%";let bar=document.createElement("div");bar.className="progress";bar.style.flex="1";let fill=document.createElement("span");fill.style.width=(m.count/max*100)+"%";bar.append(fill);let num=document.createElement("b");num.textContent=m.count;right.append(bar,num);row.append(label,right);$("monthlyReport").append(row)});
 }
-$("exportCSV").onclick=async()=>{
- let ps=(await all("punches")).sort((a,b)=>a.date.localeCompare(b.date));
- const esc=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
- let lines=[["Data","Entrada","Saída refeição","Retorno","Saída final","Horas trabalhadas","Observação"].map(esc).join(";")];
- ps.forEach(p=>lines.push([p.date,p.p1,p.p2,p.p3,p.p4,fmtMins(workedMins(p)),p.note].map(esc).join(";")));
- downloadBlob(new Blob(["\ufeff"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"}),"meu-ponto-relatorio.csv");
-};
 function downloadBlob(blob,name){let url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}
 async function blobToBase64(blob){let bytes=new Uint8Array(await blob.arrayBuffer()),step=0x8000,bin="";for(let i=0;i<bytes.length;i+=step)bin+=String.fromCharCode(...bytes.subarray(i,i+step));return btoa(bin)}
 async function makeBackup(){
@@ -411,8 +422,8 @@ $("importBackup").onclick=async()=>{
  }catch(e){alert("Não foi possível restaurar. O arquivo pode estar danificado ou não ser um backup Meu Ponto válido.")}
 };
 async function renderBackupStatus(){
- let [p,f,h]=await Promise.all([all("photos"),all("folders"),all("punches")]);
- $("backupPhotos").textContent=p.length;$("backupFolders").textContent=f.length;$("backupPunches").textContent=h.length;
+ let [p,f]=await Promise.all([all("photos"),all("folders")]);
+ $("backupPhotos").textContent=p.length;$("backupFolders").textContent=f.length;
  await checkStorage();
 }
 async function checkStorage(){
@@ -423,5 +434,60 @@ async function checkStorage(){
 }
 $("checkStorage").onclick=checkStorage;
 if(navigator.storage?.persist)navigator.storage.persist().catch(()=>{});
+
+
+// Assistente local gratuita: regras determinísticas, sem chamadas externas ou chave de API.
+function aiBubble(text,who="bot"){
+ const el=document.createElement("div");el.className="ai-bubble "+who;el.textContent=text;$("aiChat").append(el);el.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function nextWorkday(){
+ if(!schedule.firstDate)return null;
+ let d=new Date();d.setHours(12,0,0,0);
+ for(let i=0;i<370;i++){let k=dateKey(d);if(isWorkDay(k))return d;d.setDate(d.getDate()+1)}
+ return null;
+}
+async function localAssistantAnswer(q){
+ const t=q.toLocaleLowerCase("pt-BR"),photos=await all("photos"),folders=await all("folders");
+ const today=dateKey(new Date()),[start,end]=periodDateKeys();
+ const monthPhotos=photos.filter(p=>{let k=dateKey(new Date(p.date));return k>=start&&k<=end});
+ let planned=[],covered=new Set(monthPhotos.map(p=>dateKey(new Date(p.date))));
+ for(let d=new Date(start+"T12:00:00");d<=new Date(end+"T12:00:00");d.setDate(d.getDate()+1)){let k=dateKey(d);if(isWorkDay(k))planned.push(k)}
+ if(/pr[oó]ximo plant[aã]o|quando.*trabalho|quando.*plant[aã]o/.test(t)){
+  if(!schedule.firstDate)return "Sua escala ainda não foi configurada. Abra a aba Escala e informe a data do primeiro plantão.";
+  let d=nextWorkday();return d?"Seu próximo plantão previsto é "+d.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"})+". Confira o calendário caso tenha feito alguma alteração manual.":"Não encontrei um próximo plantão nos próximos 12 meses.";
+ }
+ if(/escala|folga|trabalho.*hoje|plant[aã]o.*hoje/.test(t)){
+  if(!schedule.firstDate)return "Ainda não há uma escala cadastrada. Configure seu primeiro plantão na aba Escala.";
+  let status=isWorkDay(today)?"Hoje está marcado como dia de plantão.":"Hoje está marcado como dia de folga.";
+  return status+" Seu ciclo usa a data inicial cadastrada e alterna plantão e descanso, respeitando as exceções que você marcou no calendário.";
+ }
+ if(/quantos.*(comprovante|foto)|comprovante.*(tenho|salv)|fotos/.test(t)){
+  return "Você tem "+photos.length+" comprovante(s) salvo(s) em "+folders.length+" pasta(s). No período atual, entre "+start.split("-").reverse().join("/")+" e "+end.split("-").reverse().join("/"),+" há "+monthPhotos.length+" foto(s).";
+ }
+ if(/sem foto|sem comprovante|conferir|faltando/.test(t)){
+  if(!schedule.firstDate)return "Configure primeiro sua escala. Depois consigo comparar os dias previstos com as datas das fotos salvas.";
+  let missing=planned.filter(k=>!covered.has(k));
+  if(!missing.length)return "Boa notícia: encontrei ao menos uma foto em todos os dias de plantão previstos neste período. Ainda assim, confira se cada foto corresponde ao comprovante correto.";
+  return "Encontrei "+missing.length+" dia(s) de plantão previsto(s) sem foto registrada neste período: "+missing.map(k=>fromKey(k).toLocaleDateString("pt-BR")).join(", ")+". Isso é apenas um lembrete de conferência, não significa falta ou erro no ponto.";
+ }
+ if(/pasta/.test(t)){
+  if(!folders.length)return "Você ainda não tem pastas. Ao salvar sua primeira foto, o aplicativo cria a pasta do período automaticamente.";
+  return "Suas pastas: "+folders.map(f=>f.name).join(", ")+".";
+ }
+ if(/ajuda|o que voc[eê] faz|como funciona/.test(t)){
+  return "Posso consultar sua escala cadastrada, identificar o próximo plantão, contar comprovantes, listar pastas e comparar dias previstos com fotos salvas. Para isso, pergunte de forma direta ou use os atalhos.";
+ }
+ return "Ainda não consigo responder essa pergunta no modo gratuito offline. Por enquanto, entendo consultas sobre escala, próximo plantão, folgas, comprovantes, fotos, pastas e conferência do período.";
+}
+async function askLocalAssistant(q){
+ q=q.trim();if(!q)return;aiBubble(q,"user");$("aiQuestion").value="";
+ aiBubble("Consultando seus dados neste aparelho…","bot");
+ const last=$("aiChat").lastElementChild;
+ try{const answer=await localAssistantAnswer(q);last.textContent=answer}catch(e){last.textContent="Não consegui consultar os dados agora. Tente novamente."}
+}
+$("aiSend").onclick=()=>askLocalAssistant($("aiQuestion").value);
+$("aiQuestion").addEventListener("keydown",e=>{if(e.key==="Enter")askLocalAssistant($("aiQuestion").value)});
+document.querySelectorAll(".ai-prompt").forEach(b=>b.addEventListener("click",()=>askLocalAssistant(b.dataset.q)));
+$("navAssistant").onclick=()=>{setSection("assistantView");setV6Nav("navAssistant")};
 
 </script></body></html>

@@ -1,11 +1,11 @@
 {
-  "name": "Meu Ponto · Gestão da jornada",
+  "name": "Meu Ponto",
   "short_name": "Meu Ponto",
-  "start_url": "./?v=6",
+  "start_url": "./?v=8",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f7fb",
-  "theme_color": "#102A43",
+  "background_color": "#0c1722",
+  "theme_color": "#176b87",
   "lang": "pt-BR",
   "icons": [
     {
