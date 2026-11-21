@@ -2,9 +2,9 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1769aa"><meta name="description" content="Seus comprovantes de ponto organizados no celular.">
+<meta name="theme-color" content="#102A43"><meta name="description" content="Gestão pessoal da jornada, escala e comprovantes de ponto.">
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg">
-<title>Meu Ponto</title>
+<title>Meu Ponto · Gestão da jornada</title>
 <style>
 :root{--bg:#f3f6fb;--card:#fff;--ink:#172536;--muted:#68788a;--blue:#147d8c;--soft:#e7f1fb;--line:#e4eaf0;--danger:#b42318}
 [data-theme=dark]{--bg:#101923;--card:#1b2937;--ink:#eef4fa;--muted:#a9b8c7;--blue:#57c6ce;--soft:#233d53;--line:#334354;--danger:#ff8178}
@@ -84,16 +84,82 @@ header h1:before{content:"";display:inline-block;width:11px;height:25px;border-r
 .pill{display:inline-block;border-radius:30px;padding:5px 9px;background:var(--soft);font-size:11px;font-weight:700;color:var(--blue)}
 @media(min-width:600px){.metric-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 
+
+/* Meu Ponto v6 — interface profissional */
+:root{--bg:#f4f7fb;--card:#fff;--ink:#14283d;--muted:#718096;--blue:#176b87;--soft:#eaf3f7;--line:#e2eaf0;--danger:#bd3f4a;--accent:#15a58c;--shadow:0 10px 30px rgba(17,42,65,.07)}
+[data-theme=dark]{--bg:#0c1722;--card:#142332;--ink:#edf4fa;--muted:#9eb0c0;--blue:#62c2d1;--soft:#203747;--line:#2c4050;--danger:#ff8790;--accent:#5bd3b5;--shadow:0 10px 30px rgba(0,0,0,.2)}
+*{ -webkit-tap-highlight-color:transparent}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);letter-spacing:-.12px}
+header{max-width:900px;padding:calc(18px + env(safe-area-inset-top)) 20px 14px}
+.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:43px;height:43px;border-radius:14px;background:linear-gradient(145deg,#163e59,#168b91);display:grid;place-items:center;color:white;font-size:14px;font-weight:900;letter-spacing:-1px;box-shadow:0 7px 18px #176b8735}
+header h1{font-size:21px;font-weight:800;letter-spacing:-.8px}header h1:before{display:none}.sub{font-size:12px;color:var(--muted)}
+.icon-button{width:42px;height:42px;padding:0;border:1px solid var(--line);border-radius:14px;background:var(--card);font-size:20px}
+main{max-width:900px;padding:8px 18px 120px}
+h2{font-size:17px;font-weight:800;letter-spacing:-.35px;margin:24px 0 12px}
+.card{border:1px solid var(--line);border-radius:20px;padding:18px;margin:12px 0;box-shadow:var(--shadow);background:var(--card)}
+.current{background:linear-gradient(120deg,#102f49,#176b87 60%,#16a18e);border:0;box-shadow:0 16px 32px #123e5930;padding:22px;color:#fff}
+.current .eyebrow,.current .stats{color:#d5edf2}.current h2{font-size:27px;color:white;margin:7px 0}.current:after{opacity:.35}
+.current button{background:#fff;color:#14566b;border-radius:12px;font-size:13px;padding:12px 16px}
+.eyebrow{font-size:10px;letter-spacing:1.4px;font-weight:850;color:var(--blue)}
+button,.btn{border:1px solid var(--line);border-radius:13px;background:var(--card);color:var(--ink);font-weight:700;transition:transform .15s,opacity .15s}
+button:active{transform:scale(.98)}
+.primary{background:linear-gradient(110deg,#176b87,#168d91);color:#fff;border:0;border-radius:15px;box-shadow:0 8px 18px #176b8728;padding:16px;font-size:15px}
+.row{gap:10px}.grid{gap:12px}
+.photo{border:1px solid var(--line);border-radius:16px;box-shadow:0 5px 15px #102a430c}
+.folder{padding:14px 10px;border-radius:14px;background:var(--card);border:1px solid var(--line);margin:7px 0;box-shadow:0 3px 12px #102a4308}
+.folder .emoji{background:var(--soft);border-radius:12px;display:grid;place-items:center;width:42px;height:42px}
+input,select{border:1px solid var(--line);border-radius:12px;padding:13px;background:var(--card);color:var(--ink)}
+label{display:block;margin-top:9px;font-size:12px;font-weight:750;color:var(--muted)}
+.notice{line-height:1.6}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:4;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
+.bottom-nav-inner{max-width:900px;margin:auto;display:flex;overflow-x:auto;gap:4px;scrollbar-width:none}
+.bottom-nav-inner button{flex:1;min-width:62px;padding:8px 4px 7px;border:0;background:transparent;color:var(--muted);font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:13px}
+.bottom-nav-inner button.active{background:var(--soft);color:var(--blue)}
+.navicon{font-size:19px;line-height:20px}
+.metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.metric{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 4px 14px #102a4308}
+.metric small{display:block;color:var(--muted);font-size:11px;font-weight:650}
+.metric strong{display:block;font-size:22px;letter-spacing:-.8px;margin-top:6px}
+.metric.positive strong{color:var(--accent)}
+.pill{border:1px solid var(--line);background:var(--soft);border-radius:999px;padding:6px 10px;font-size:11px;font-weight:750;color:var(--blue)}
+.calendar-grid{gap:6px}.day{border-radius:10px;min-height:38px}.day.work{background:var(--blue);color:white}.day.today{outline:2px solid var(--accent);outline-offset:1px}
+.calendar-head{display:flex;align-items:center;justify-content:space-between}.calendar-head button{min-width:40px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.section-head h2{margin:0}.muted{color:var(--muted)}
+.action-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.action-tile{padding:14px;text-align:left;min-height:88px;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+.action-tile b{display:block;font-size:13px;margin-top:8px}.action-tile span{font-size:20px}
+.progress{height:8px;background:var(--soft);border-radius:99px;overflow:hidden}.progress>span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--accent));border-radius:99px}
+.report-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:13px}
+.report-row:last-child{border:0}
+.empty-state{padding:24px 12px;text-align:center;color:var(--muted);font-size:13px}
+.searchbox{margin:6px 0 12px}
+.badge-note{font-size:10px;color:var(--muted);font-weight:650}
+@media(min-width:650px){.metric-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.action-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
 </style></head>
 <body>
-<header><div><h1>📸 Meu Ponto</h1><div class="sub">Seus comprovantes, sempre organizados</div></div><button id="settingsBtn" aria-label="Ajustes">⚙️</button></header>
+<header><div class="brand"><div class="brand-mark">MP</div><div><h1>Meu Ponto</h1><div class="sub">Sua jornada, sob controle.</div></div></div><button id="settingsBtn" class="icon-button" aria-label="Ajustes">⚙</button></header>
 <main>
 <section id="home">
+<div class="section-head"><div><div class="eyebrow">VISÃO GERAL</div><h2 style="margin:4px 0 12px">Seu painel</h2></div><span class="pill" id="todayLabel">Hoje</span></div>
+<div class="metric-grid" style="margin-bottom:14px">
+ <div class="metric"><small>Comprovantes salvos</small><strong id="dashPhotos">0</strong></div>
+ <div class="metric"><small>Plantões registrados</small><strong id="dashShifts">0</strong></div>
+ <div class="metric"><small>Horas registradas</small><strong id="dashWorked">00:00</strong></div>
+ <div class="metric"><small>Próximo status</small><strong id="dashStatus" style="font-size:16px">—</strong></div>
+</div>
+<div class="action-grid">
+ <button class="action-tile" id="quickPhoto"><span>📷</span><b>Fotografar ponto</b><small class="muted">Guardar comprovante</small></button>
+ <button class="action-tile" id="quickPunch"><span>⏱️</span><b>Registrar batidas</b><small class="muted">Conferir plantão</small></button>
+ <button class="action-tile" id="quickCalendar"><span>🗓️</span><b>Ver minha escala</b><small class="muted">Plantões e folgas</small></button>
+ <button class="action-tile" id="quickReport"><span>📊</span><b>Relatórios</b><small class="muted">Resumo do período</small></button>
+</div>
 <div class="card current"><div class="eyebrow">PERÍODO ATUAL</div><h2 id="currentName">—</h2><div class="stats" id="currentMeta">Calculando período…</div><button id="openCurrent" style="margin-top:12px">Abrir pasta　→</button></div>
 <button class="primary" id="takeBtn">📷　Tirar foto</button>
 <input id="camera" type="file" accept="image/*" capture="environment" class="hidden">
 <div class="row"><h2 style="flex:1">Minhas pastas</h2><button id="newFolderBtn">＋ Criar pasta</button></div>
-<div id="folderList"></div>
+<input id="folderSearch" class="searchbox" type="search" placeholder="Buscar pasta por nome..."><div id="folderList"></div>
 <h2>Últimos comprovantes</h2><div class="grid" id="latestGrid"></div>
 </section>
 <section id="folderView" class="hidden">
@@ -140,6 +206,29 @@ header h1:before{content:"";display:inline-block;width:11px;height:25px;border-r
  <div class="card"><strong>Histórico de plantões</strong><div id="punchList" class="sub" style="margin-top:10px">Nenhum plantão registrado.</div></div>
 </section>
 
+
+<section id="reportsView" class="hidden">
+ <div class="eyebrow">ANÁLISE PESSOAL</div><h2 style="margin-top:4px">Relatórios</h2>
+ <div class="card"><div class="section-head"><strong>Resumo de horas</strong><span class="pill">Estimativa</span></div>
+  <div class="metric-grid" style="margin-top:12px">
+   <div class="metric"><small>Total trabalhado</small><strong id="repWorked">00:00</strong></div>
+   <div class="metric"><small>Saldo estimado</small><strong id="repBalance">00:00</strong></div>
+   <div class="metric"><small>Plantões</small><strong id="repShifts">0</strong></div>
+   <div class="metric"><small>Comprovantes</small><strong id="repPhotos">0</strong></div>
+  </div>
+  <p class="notice">O saldo compara os plantões registrados com uma referência de 12 horas por plantão. Não substitui o espelho de ponto nem considera regras específicas de folha, feriados ou acordos coletivos.</p>
+ </div>
+ <div class="card"><strong>Atividade dos últimos 6 meses</strong><div id="monthlyReport" style="margin-top:12px"></div></div>
+ <button class="primary" id="exportCSV">Baixar relatório de batidas (CSV)</button>
+</section>
+<section id="backupView" class="hidden">
+ <div class="eyebrow">SEUS DADOS, SOB SEU CONTROLE</div><h2 style="margin-top:4px">Privacidade e cópias de segurança</h2>
+ <div class="card"><strong>Armazenamento neste aparelho</strong><p class="notice">Fotos, pastas, escala e batidas ficam no armazenamento local do navegador. Uma cópia de segurança ajuda a recuperar os dados se você trocar de celular ou limpar o navegador.</p><div class="metric-grid"><div class="metric"><small>Fotos</small><strong id="backupPhotos">0</strong></div><div class="metric"><small>Pastas</small><strong id="backupFolders">0</strong></div><div class="metric"><small>Batidas</small><strong id="backupPunches">0</strong></div></div></div>
+ <div class="card"><strong>Exportar cópia completa</strong><p class="notice">Gera um arquivo de backup com fotos, pastas, escala, configurações e registros. Guarde em local seguro. O arquivo pode conter dados pessoais.</p><button class="primary" id="exportBackup">Criar cópia de segurança</button></div>
+ <div class="card"><strong>Restaurar cópia</strong><p class="notice">Selecione um backup Meu Ponto em formato JSON. Os dados serão mesclados aos existentes; registros com o mesmo identificador serão atualizados.</p><input id="backupFile" type="file" accept=".json,application/json"><button id="importBackup">Restaurar backup selecionado</button></div>
+ <div class="card"><strong>Diagnóstico</strong><div id="storageStatus" class="notice">Verificando armazenamento...</div><button id="checkStorage">Atualizar diagnóstico</button></div>
+</section>
+
 <section id="settings" class="hidden">
 <div class="toolbar"><button id="settingsBack">← Voltar</button><h2 style="flex:1;margin:0">Ajustes</h2></div>
 <div class="card">
@@ -153,12 +242,14 @@ header h1:before{content:"";display:inline-block;width:11px;height:25px;border-r
 </section>
 </main>
 <div id="viewer" class="hidden"><img id="largePhoto"><div class="actions"><button id="sharePhoto">Compartilhar</button><button id="deletePhoto" class="danger">Apagar</button><button id="closeViewer">Fechar</button></div></div>
-<footer>Meu Ponto · armazenamento local no aparelho</footer>
+<footer>Meu Ponto · gestão pessoal da jornada · dados armazenados neste aparelho</footer>
 <nav class="bottom-nav" aria-label="Navegação principal"><div class="bottom-nav-inner">
 <button id="navHome" class="active"><span class="navicon">⌂</span>Início</button>
 <button id="navCalendar"><span class="navicon">▦</span>Escala</button>
 <button id="navHours"><span class="navicon">◷</span>Horas</button>
 <button id="navFolders"><span class="navicon">▤</span>Pastas</button>
+<button id="navReports"><span class="navicon">▥</span>Relatórios</button>
+<button id="navBackup"><span class="navicon">⬡</span>Backup</button>
 <button id="navSettings"><span class="navicon">⚙</span>Ajustes</button>
 </div></nav>
 <script>
@@ -220,7 +311,7 @@ function timeMins(t){if(!t)return null;let [h,m]=t.split(":").map(Number);return
 function elapsed(a,b){let v=b-a;return v<0?v+1440:v}
 function workedMins(p){let a=timeMins(p.p1),b=timeMins(p.p2),c=timeMins(p.p3),d=timeMins(p.p4);if([a,b,c,d].some(v=>v===null))return null;return elapsed(a,b)+elapsed(c,d)}
 async function loadSchedule(){let s=await req("settings","readonly",x=>x.get("schedule"));if(s?.value)schedule={...schedule,...s.value,overrides:s.value.overrides||{}}}
-function setSection(name){["home","folderView","settings","calendarView","hoursView"].forEach(id=>$(id).classList.toggle("hidden",id!==name))}
+function setSection(name){["home","folderView","settings","calendarView","hoursView","reportsView","backupView"].forEach(id=>$(id).classList.toggle("hidden",id!==name))}
 function renderCalendar(){
  $("calendarTitle").textContent=monthNames[calendarCursor.getMonth()]+" "+calendarCursor.getFullYear();
  let grid=$("calendarGrid");grid.innerHTML="";
@@ -246,4 +337,91 @@ $("overrideDay").onclick=async()=>{if(!selectedCalendarDate){alert("Escolha um d
 $("savePunch").onclick=async()=>{let date=$("punchDate").value;if(!date){alert("Informe a data do plantão.");return}let p={date,p1:$("p1").value,p2:$("p2").value,p3:$("p3").value,p4:$("p4").value,note:$("punchNote").value};if([p.p1,p.p2,p.p3,p.p4].some(v=>!v)){alert("Preencha as quatro batidas.");return}let total=workedMins(p);await put("punches",p);alert("Plantão salvo: "+fmtMins(total)+" trabalhadas. Confira os horários; este é um cálculo pessoal estimado.");renderHours()};
 
 (async()=>{try{await openDB();let s=await req("settings","readonly",x=>x.get("main"));if(s?.value)settings={...settings,...s.value};applyTheme();await loadSchedule();await render();if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});}catch(e){alert("Erro ao iniciar o armazenamento. Tente abrir novamente.")}})();
+
+// v6 enhancements: dashboard, reports, search and portable local backup.
+function fmtHours(mins){return fmtMins(mins||0)}
+async function updateDashboard(){
+ const photos=await all("photos"),folders=await all("folders"),punches=await all("punches");
+ let total=0;punches.forEach(p=>{let v=workedMins(p);if(v!==null)total+=v});
+ $("dashPhotos").textContent=photos.length;$("dashShifts").textContent=punches.length;$("dashWorked").textContent=fmtHours(total);
+ $("todayLabel").textContent=new Date().toLocaleDateString("pt-BR",{weekday:"short",day:"2-digit",month:"short"});
+ let today=dateKey(new Date());$("dashStatus").textContent=isWorkDay(today)?"Plantão":"Folga";
+}
+const oldRender=render;
+render=async function(){await oldRender();await updateDashboard()};
+$("quickPhoto").onclick=()=>$("camera").click();
+$("quickPunch").onclick=()=>{setSection("hoursView");setNav("navHours");$("punchDate").value=dateKey(new Date());renderHours()};
+$("quickCalendar").onclick=()=>$("navCalendar").click();
+$("quickReport").onclick=()=>$("navReports").click();
+$("folderSearch").addEventListener("input",e=>{let q=e.target.value.trim().toLocaleLowerCase("pt-BR");[...$("folderList").children].forEach(el=>el.classList.toggle("hidden",!el.textContent.toLocaleLowerCase("pt-BR").includes(q)))});
+function setV6Nav(active){["navHome","navCalendar","navHours","navFolders","navSettings","navReports","navBackup"].forEach(id=>$(id)?.classList.toggle("active",id===active))}
+$("navHome").onclick=()=>{setSection("home");setV6Nav("navHome");render();window.scrollTo({top:0,behavior:"smooth"})};
+$("navFolders").onclick=()=>{setSection("home");setV6Nav("navFolders");setTimeout(()=>$("folderList").scrollIntoView({behavior:"smooth",block:"start"}),40)};
+$("navCalendar").onclick=()=>{setSection("calendarView");setV6Nav("navCalendar");$("firstShift").value=schedule.firstDate;$("shiftStart").value=schedule.start||"19:00";renderCalendar()};
+$("navHours").onclick=()=>{setSection("hoursView");setV6Nav("navHours");renderHours()};
+$("navReports").onclick=()=>{setSection("reportsView");setV6Nav("navReports");renderReports()};
+$("navBackup").onclick=()=>{setSection("backupView");setV6Nav("navBackup");renderBackupStatus()};
+$("navSettings").onclick=()=>{$("settingsBtn").click();setV6Nav("navSettings")};
+$("settingsBtn").onclick=async()=>{setSection("settings");setV6Nav("navSettings");$("cutoff").value=settings.cutoff;$("stamp").checked=settings.stamp;$("quality").value=settings.quality;$("theme").value=settings.theme};
+$("settingsBack").onclick=()=>{setSection("home");setV6Nav("navHome");render()};
+$("saveSettings").onclick=async()=>{
+ let n=+$("cutoff").value;if(n<1||n>28){alert("Escolha um dia entre 1 e 28.");return}
+ settings={cutoff:n,stamp:$("stamp").checked,quality:$("quality").value,theme:$("theme").value};
+ await put("settings",{key:"main",value:settings});applyTheme();setSection("home");setV6Nav("navHome");await render();alert("Ajustes salvos!");
+};
+$("backBtn").onclick=()=>{setSection("home");setV6Nav("navFolders");render()};
+async function renderReports(){
+ let ps=await all("punches"),photos=await all("photos"),worked=0,expected=0;
+ ps.forEach(p=>{let v=workedMins(p);if(v!==null)worked+=v;expected+=720});
+ $("repWorked").textContent=fmtHours(worked);$("repBalance").textContent=fmtMins(worked-expected);$("repShifts").textContent=ps.length;$("repPhotos").textContent=photos.length;
+ let now=new Date(),months=[];
+ for(let i=5;i>=0;i--){let d=new Date(now.getFullYear(),now.getMonth()-i,1),key=`${d.getFullYear()}-${pad2(d.getMonth()+1)}`,count=ps.filter(p=>p.date.startsWith(key)).length;months.push({label:monthNames[d.getMonth()].slice(0,3)+" "+String(d.getFullYear()).slice(-2),count})}
+ let max=Math.max(1,...months.map(x=>x.count));$("monthlyReport").innerHTML="";
+ months.forEach(m=>{let row=document.createElement("div");row.className="report-row";let label=document.createElement("span");label.textContent=m.label;let right=document.createElement("div");right.style.cssText="display:flex;align-items:center;gap:9px;min-width:58%";let bar=document.createElement("div");bar.className="progress";bar.style.flex="1";let fill=document.createElement("span");fill.style.width=(m.count/max*100)+"%";bar.append(fill);let num=document.createElement("b");num.textContent=m.count;right.append(bar,num);row.append(label,right);$("monthlyReport").append(row)});
+}
+$("exportCSV").onclick=async()=>{
+ let ps=(await all("punches")).sort((a,b)=>a.date.localeCompare(b.date));
+ const esc=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+ let lines=[["Data","Entrada","Saída refeição","Retorno","Saída final","Horas trabalhadas","Observação"].map(esc).join(";")];
+ ps.forEach(p=>lines.push([p.date,p.p1,p.p2,p.p3,p.p4,fmtMins(workedMins(p)),p.note].map(esc).join(";")));
+ downloadBlob(new Blob(["\ufeff"+lines.join("\r\n")],{type:"text/csv;charset=utf-8"}),"meu-ponto-relatorio.csv");
+};
+function downloadBlob(blob,name){let url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}
+async function blobToBase64(blob){let bytes=new Uint8Array(await blob.arrayBuffer()),step=0x8000,bin="";for(let i=0;i<bytes.length;i+=step)bin+=String.fromCharCode(...bytes.subarray(i,i+step));return btoa(bin)}
+async function makeBackup(){
+ let [folders,photos,settingsRows,punches]=await Promise.all([all("folders"),all("photos"),all("settings"),all("punches")]);
+ let packed=[];for(let p of photos)packed.push({...p,blob:await blobToBase64(p.blob),blobType:p.blob?.type||"image/jpeg"});
+ return {app:"Meu Ponto",format:1,createdAt:new Date().toISOString(),folders,photos:packed,settings:settingsRows,punches};
+}
+$("exportBackup").onclick=async()=>{
+ try{$("exportBackup").disabled=true;$("exportBackup").textContent="Preparando cópia...";let data=await makeBackup();downloadBlob(new Blob([JSON.stringify(data)],{type:"application/json"}),`meu-ponto-backup-${dateKey(new Date())}.json`);alert("Cópia de segurança criada. Guarde o arquivo em local seguro.");}
+ catch(e){alert("Não foi possível criar o backup. Verifique o espaço disponível no aparelho.")}finally{$("exportBackup").disabled=false;$("exportBackup").textContent="Criar cópia de segurança"}
+};
+$("importBackup").onclick=async()=>{
+ let file=$("backupFile").files[0];if(!file){alert("Escolha um arquivo de backup primeiro.");return}
+ if(!confirm("Restaurar este backup? Os registros com o mesmo identificador serão atualizados. Faça uma cópia atual antes de continuar."))return;
+ try{
+  let data=JSON.parse(await file.text());if(data.app!=="Meu Ponto"||data.format!==1)throw Error("Formato inválido");
+  for(let f of (data.folders||[]))await put("folders",f);
+  for(let p of (data.photos||[])){let raw=atob(p.blob),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);await put("photos",{...p,blob:new Blob([bytes],{type:p.blobType||"image/jpeg"})});}
+  for(let x of (data.settings||[]))await put("settings",x);
+  for(let p of (data.punches||[]))await put("punches",p);
+  let main=await req("settings","readonly",s=>s.get("main"));if(main?.value)settings={...settings,...main.value};
+  await loadSchedule();applyTheme();await render();await renderBackupStatus();alert("Backup restaurado com sucesso!");
+ }catch(e){alert("Não foi possível restaurar. O arquivo pode estar danificado ou não ser um backup Meu Ponto válido.")}
+};
+async function renderBackupStatus(){
+ let [p,f,h]=await Promise.all([all("photos"),all("folders"),all("punches")]);
+ $("backupPhotos").textContent=p.length;$("backupFolders").textContent=f.length;$("backupPunches").textContent=h.length;
+ await checkStorage();
+}
+async function checkStorage(){
+ let estimate=await navigator.storage?.estimate?.();let persisted=await navigator.storage?.persisted?.();
+ let used=estimate?.usage?`${(estimate.usage/1048576).toFixed(1)} MB utilizados`:"Uso não informado pelo navegador";
+ let quota=estimate?.quota?` de ${(estimate.quota/1048576).toFixed(0)} MB estimados`:"";
+ $("storageStatus").textContent=`${used}${quota}. Proteção contra limpeza automática: ${persisted?"solicitada/concedida":"não confirmada"}. Seus dados continuam locais neste aparelho.`;
+}
+$("checkStorage").onclick=checkStorage;
+if(navigator.storage?.persist)navigator.storage.persist().catch(()=>{});
+
 </script></body></html>

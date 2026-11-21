@@ -1,8 +1,26 @@
-MEU PONTO — VERSÃO CORRIGIDA
+MEU PONTO v6 — GESTÃO PESSOAL DA JORNADA
 
-Arquivos do site: index.html, manifest.webmanifest, icon.svg e sw.js.
-Envie/substitua os quatro arquivos na raiz do repositório GitHub.
-Não apague dados do navegador nem desinstale o app. Fotos e configurações antigas ficam no IndexedDB local do aparelho.
+Arquivos do site:
+- index.html
+- manifest.webmanifest
+- sw.js
+- icon.svg
 
-A leitura OCR automática das fotos ainda não está incluída. As quatro batidas são digitadas e conferidas pelo usuário.
-O banco de horas nesta versão usa 12h como referência por plantão e é uma estimativa pessoal; não substitui o espelho oficial.
+Instalação:
+1. Extraia o ZIP.
+2. Envie os quatro arquivos individuais para a raiz do repositório GitHub, substituindo os anteriores.
+3. Aguarde o GitHub Actions concluir com sucesso.
+4. Abra https://musicagustavo18-creator.github.io/meu-ponto/?v=6 no Chrome.
+5. Atualize/reinstale o atalho se necessário.
+
+Compatibilidade e preservação:
+- Mantém o banco IndexedDB MeuPontoDB e os stores existentes (folders, photos, settings, punches).
+- Não apaga fotos, pastas, escala ou batidas locais.
+- O backup exporta os registros e fotos em JSON; a restauração mescla os dados.
+- Dados continuam locais no aparelho. Não há nuvem nem sincronização automática.
+
+Observações:
+- Banco de horas é estimativa pessoal usando 12h por plantão como referência.
+- Escala alterna dias de calendário e permite exceções manuais.
+- Não inclui OCR automático de comprovantes.
+- Faça backup periódico e antes de limpar dados do navegador ou trocar de aparelho.
